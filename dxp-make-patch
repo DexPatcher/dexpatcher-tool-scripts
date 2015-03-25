@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+source "$(dirname "$(readlink -f "$0")")/dxp.config"
+
+if [ ! -d decode ]; then
+    echo "error: please run this command from the root directory of a structure built by 'dxp-setup-for-apk'"
+    exit 1
+fi
+
+rm -rf bin/*
+
+find src -type f -name "*.java" -print0 | xargs -0 --no-run-if-empty javac -cp "$dxp_android_libs:$dxp_dexpatcher_annotation_jar:source.jar" -sourcepath src -d bin
+
+dx --dex --output patch.dex $dxp_dexpatcher_annotation_jar bin
+
+# This jar is not needed:
+#d2j-dex2jar.sh --force --output patch.jar patch.dex
+
+echo "dxp-make-patch: done: patch.dex"
+

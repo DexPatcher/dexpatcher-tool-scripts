@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+source "$(dirname "$(readlink -f "$0")")/dxp.config"
+
+if [ ! -d decode ]; then
+    echo "error: please run this command from the root directory of a structure built by 'dxp-setup-for-apk'"
+    exit 1
+fi
+
+java -jar "$dxp_dexpatcher_jar" --verbose --output patched.dex source.dex patch.dex
+
+# This jar is not needed:
+#d2j-dex2jar.sh --force --output patched.jar patched.dex
+
+cp patched.dex decode/classes.dex
+apktool build --output patched.apk decode/
+
+jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore keystore -storepass android patched.apk key
+
+zipalign -f 4 patched.apk patched-aligned.apk
+rm patched.apk
+mv patched-aligned.apk patched.apk
+
+echo "dxp-make-patched: done: patched.apk"
+

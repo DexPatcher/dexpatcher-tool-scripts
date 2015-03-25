@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+source "$(dirname "$(readlink -f "$0")")/dxp.config"
+
+if [ ! -d decode ]; then
+    echo "error: please run this command from the root directory of a structure built by 'dxp-setup-for-apk'"
+    exit 1
+fi
+
+"$dxp_script_dir/dxp-make-patch"
+"$dxp_script_dir/dxp-make-patched"
+
+echo "dxp-make: all done"
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+source "$(dirname "$(readlink -f "$0")")/dxp.config"
+
+apk="$1"
+
+apk_filename="$(basename "$apk")"
+dir="${apk_filename%.*}"
+
+mkdir "$dir"
+cp "$apk" "$dir/source.apk"
+cd "$dir"
+
+apktool decode --output decode --no-src source.apk
+cp decode/classes.dex source.dex
+
+d2j-dex2jar.sh --output source.jar source.dex
+d2j-dex2jar.sh --no-code --output source-nocode.jar source.dex
+
+"$dxp_script_dir/dxp-cfr" source.jar --outputdir src-cfr
+"$dxp_script_dir/dxp-cfr" source-nocode.jar --outputdir src-cfr-nocode
+
+mkdir src
+mkdir bin
+
+echo "dxp-setup-for-apk: done"
+echo "please cd into the created directory and run 'dxp-create-keystore'"
+
