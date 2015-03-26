@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-source "$(dirname "$(readlink -f "$0")")/dxp.config"
-
-java -cp "$dxp_cfr_jar:$dxp_android_libs" org.benf.cfr.reader.Main "$@"
-

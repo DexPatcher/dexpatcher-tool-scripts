@@ -18,12 +18,12 @@ cp decode/classes.dex source.dex
 d2j-dex2jar.sh --output source.jar source.dex
 d2j-dex2jar.sh --no-code --output source-nocode.jar source.dex
 
-"$dxp_script_dir/dxp-cfr" source.jar --outputdir src-cfr
-"$dxp_script_dir/dxp-cfr" source-nocode.jar --outputdir src-cfr-nocode
+dxp-cfr source.jar --outputdir src-cfr
+dxp-cfr source-nocode.jar --outputdir src-cfr-nocode
 
 mkdir src
 mkdir bin
 
-echo "dxp-setup-for-apk: done"
+echo "dxp-setup-for-apk: done: $dir"
 echo "please cd into the created directory and run 'dxp-create-keystore'"
 
