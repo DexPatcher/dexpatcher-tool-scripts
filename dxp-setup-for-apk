@@ -5,6 +5,18 @@ source "$(dirname "$(readlink -f "$0")")/dxp.config"
 
 apk="$1"
 
+if [[ ! $apk ]]
+then
+    echo "usage: dxp-setup-for-apk <source-apk>"
+    exit 1
+fi
+
+if [[ ! -f $apk ]]
+then
+    echo "error: file not found: $apk" >&2
+    exit 1
+fi
+
 apk_filename="$(basename "$apk")"
 dir="${apk_filename%.*}"
 
