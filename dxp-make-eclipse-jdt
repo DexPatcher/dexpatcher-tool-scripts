@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+source "$(dirname "$(readlink -f "$0")")/dxp.config"
+
+dxp-test-setup
+
+dxp-dx --dex --output patch.dex $dxp_dexpatcher_annotation_jar bin
+
+# This jar is not needed:
+#d2j-dex2jar.sh --force --output patch.jar patch.dex
+
+"$dxp_script_dir/dxp-make-patched"
+
+echo "dxp-make-eclipse: all done"
+
